@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard Admin - MyMarketU</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-red-600 min-h-screen fixed">
+            <div class="p-4">
+                <div class="flex items-center mb-8">
+                    <img src="/img/a.png" alt="Logo MyMarketU" class="h-8 w-auto mr-2">
+                    <div class="text-white text-2xl font-bold">MyMarketU</div>
+                </div>
+                <nav>
+                    <a href="/admin/dashboard.html" class="flex items-center text-white p-3 mb-2 bg-red-500 rounded">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        Beranda
+                    </a>
+                    <a href="/admin/products.html" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-box mr-3"></i>
+                        Produk
+                    </a>
+                    <a href="/admin/orders" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-shopping-cart mr-3"></i>
+                        Pesanan
+                    </a>
+                    <a href="/admin/customers" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-users mr-3"></i>
+                        Pelanggan
+                    </a>
+                    <a href="/admin/reports" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        Laporan
+                    </a>
+                    <a href="/admin/settings" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-cog mr-3"></i>
+                        Pengaturan
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex-1">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center px-8 py-4">
+                    <div class="text-2xl text-gray-800">Beranda</div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <img src="/img/profile/default.png" alt="Profile" class="h-8 w-8 rounded-full mr-2" id="adminPhoto">
+                            <span class="text-gray-600" id="adminName">Admin</span>
+                        </div>
+                        <a href="#" id="logoutBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-sign-out-alt"></i> Keluar
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <main class="p-8">
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="text-gray-500 text-sm mb-2">Total Penjualan</div>
+                        <div class="text-2xl font-bold text-gray-800" id="totalSales">Rp0</div>
+                        <div class="text-sm mt-2" id="salesGrowth">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="text-gray-500 text-sm mb-2">Pesanan</div>
+                        <div class="text-2xl font-bold text-gray-800" id="totalOrders">0</div>
+                        <div class="text-sm mt-2" id="ordersGrowth">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="text-gray-500 text-sm mb-2">Pelanggan</div>
+                        <div class="text-2xl font-bold text-gray-800" id="totalCustomers">0</div>
+                        <div class="text-sm mt-2" id="customersGrowth">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="text-gray-500 text-sm mb-2">Produk</div>
+                        <div class="text-2xl font-bold text-gray-800" id="totalProducts">0</div>
+                        <div class="text-sm mt-2" id="productsGrowth">
+                            <i class="fas fa-arrow-up"></i> 0%
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="bg-white rounded-lg shadow mb-8">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-800">Pesanan Terbaru</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full" id="recentOrders">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID Pesanan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pelanggan</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data akan diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-800">Peringatan Stok Menipis</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full" id="lowStockProducts">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Produk</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stok Saat Ini</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data akan diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal untuk detail pesanan -->
+    <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+        <div class="bg-white rounded-lg p-8 max-w-2xl w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Detail Pesanan</h3>
+                <button onclick="closeOrderModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="orderDetails">
+                <!-- Detail pesanan akan diisi oleh JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/admin/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang - MyMarketU</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-links">
+            <a href="#">Tentang Kami</a>
+            <a href="#">Akun Saya</a>
+            <a href="#">Wishlist</a>
+            <a href="#">Pelacak Pesanan</a>
+        </div>
+        <div class="d-flex align-items-center w-100">
+            <a class="navbar-brand" href="/customer/dashboard.html">
+                <img src="../img/a.png" alt="MyMarketU">
+            </a>
+            <form class="search-bar">
+                <input class="form-control" type="search" id="search-box" 
+                    placeholder="Cari produk, makanan atau minuman.." aria-label="Search">
+            </form>
+            <div class="account-icons">
+                <a href="/customer/cart.html" title="Keranjang Belanja" class="active">🛒</a>
+                <a href="#" id="logoutBtn" title="Keluar">👤</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+        <h2 class="mb-4">Keranjang Belanja</h2>
+        
+        <div class="row">
+            <!-- Cart Items -->
+            <div class="col-md-8">
+                <div class="cart-items">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Cart Summary -->
+            <div class="col-md-4">
+                <div class="cart-summary bg-white p-4 rounded shadow-sm">
+                    <h4>Ringkasan Belanja</h4>
+                    <div class="summary-item d-flex justify-content-between my-3">
+                        <span>Total Harga</span>
+                        <span id="totalPrice">Rp 0</span>
+                    </div>
+                    <div class="summary-item d-flex justify-content-between my-3">
+                        <span>Total Diskon</span>
+                        <span id="totalDiscount">-Rp 0</span>
+                    </div>
+                    <hr>
+                    <div class="summary-total d-flex justify-content-between my-3">
+                        <span class="fw-bold">Total Bayar</span>
+                        <span class="fw-bold" id="grandTotal">Rp 0</span>
+                    </div>
+                    <button id="checkoutBtn" class="btn btn-danger w-100 mt-3">Checkout</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 newsletter-section">
+                    <h6>Bergabunglah dengan buletin kami secara gratis</h6>
+                    <p>Daftar sekarang untuk mendapatkan update terkini tentang promosi & kupon.</p>
+                    <form id="newsletterForm">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Masukkan Email Anda">
+                            <button class="btn btn-danger" type="submit">KIRIM</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4 contact-info">
+                    <h6>Butuh Bantuan?</h6>
+                    <p>Senin-Jumat: 08 pagi - 09 malam</p>
+                    <p><b>62 188 1881 1111</b></p>
+                    <p>Email: info@mymarketu.com</p>
+                </div>
+                <div class="col-md-4 quick-links">
+                    <h6>Bantuan</h6>
+                    <ul>
+                        <li><a href="#">Pesanan Anda</a></li>
+                        <li><a href="#">Pengembalian</a></li>
+                        <li><a href="#">Pengiriman</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom text-center mt-3">
+                <p>&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../js/customer/cart.js"></script>
+</body>
+</html>

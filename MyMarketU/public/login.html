@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MyMarketU</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-links">
+            <a href="#">Tentang Kami</a>
+            <a href="#">Akun Saya</a>
+            <a href="#">Wishlist</a>
+            <a href="#">Pelacak Pesanan</a>
+        </div>
+        <div class="navbar-links">
+            <div class="btn-group">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Indonesia
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">English</a></li>
+                </ul>
+            </div>
+            <div class="btn-group">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    IDR
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Dollar</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="d-flex align-items-center w-100">
+            <a class="navbar-brand" href="#">
+                <img src="img/a.png" alt="MyMarketU">
+            </a>
+            <form class="search-bar">
+                <input class="form-control" type="search" placeholder="Cari produk, makanan atau minuman.." aria-label="Search">
+            </form>
+            <div class="account-icons">
+                <a href="#">👤 Masuk Akun</a>
+                <a href="#">❤</a>
+                <a href="#">🛒</a>
+            </div>
+        </div>
+        <div class="navbar-links mt-3">
+            <a href="#">Beranda</a>
+            <a href="#">Toko</a>
+            <a href="#">Makanan</a>
+            <a href="#">Minuman</a>
+            <a href="#" class="text-danger">Hampir Selesai <span class="badge bg-danger text-white badge-sale">SALE</span></a>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <main class="body-radius flex-grow-1">
+        <section class="container mt-5 mb-5">
+            <div class="row justify-content-center">
+                <div class="col-md-5">
+                    <h3 class="text-center mb-4">
+                        <strong class="text-dark">Login</strong>
+                        <a href="register.html" class="text-decoration-none text-muted">Register</a>
+                    </h3>
+                    
+                    <!-- Error message div -->
+                    <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
+                    <!-- Form with ID for JavaScript -->
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                                          
+                        <button type="submit" class="btn btn-danger w-100">Login</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 newsletter-section">
+                    <h6>Bergabunglah dengan buletin kami secara gratis</h6>
+                    <p>Daftar sekarang untuk mendapatkan update terkini tentang promosi & kupon. Jangan khawatir, kami tidak mengirim spam!</p>
+                    <form>
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Masukkan Alamat Email Anda">
+                            <button class="btn btn-danger" type="submit">KIRIM</button>
+                        </div>
+                        <small>Dengan bergabung, Anda menyetujui <a href="#">Syarat & Ketentuan</a> serta <a href="#">Kebijakan Privasi & Cookie</a> kami.</small>
+                    </form>
+                </div>
+
+                <div class="col-md-4 contact-info">
+                    <h6>Butuh Bantuan?</h6>
+                    <p>Senin-Jumat: 08 pagi - 09 malam</p>
+                    <p><b>62 188 1881 1111</b></p>
+                    <p>Email: <a href="mailto:info@contoh.com">info@contoh.com</a></p>
+                </div>
+
+                <div class="col-md-4 quick-links">
+                    <h6>Biarkan Kami Membantu Anda</h6>
+                    <ul>
+                        <li><a href="#">Pernyataan Aksesibilitas</a></li>
+                        <li><a href="#">Pesanan Anda</a></li>
+                        <li><a href="#">Pengembalian & Penggantian</a></li>
+                        <li><a href="#">Tarif & Kebijakan Pengiriman</a></li>
+                        <li><a href="#">Kebijakan Privasi</a></li>
+                        <li><a href="#">Syarat dan Ketentuan</a></li>
+                        <li><a href="#">Pusat Bantuan</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

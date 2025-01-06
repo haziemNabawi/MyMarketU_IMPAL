@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Dashboard - MyMarketU</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .product-box {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            background-color: #f9f9f9;
+            transition: transform 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 400px;
+        }
+
+        .product-box:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin: 0 auto 10px;
+        }
+
+        .product-box h5 {
+            font-size: 16px;
+            margin: 10px 0;
+            height: auto;
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-links">
+            <a href="#">Tentang Kami</a>
+            <a href="#">Akun Saya</a>
+            <a href="#">Wishlist</a>
+            <a href="#">Pelacak Pesanan</a>
+        </div>
+        <div class="d-flex align-items-center w-100">
+            <a class="navbar-brand" href="/customer/dashboard">
+                <img src="../img/a.png" alt="MyMarketU">
+            </a>
+            <form class="search-bar">
+                <input class="form-control" type="search" id="search-box" 
+                    placeholder="Cari produk, makanan atau minuman.." aria-label="Search">
+            </form>
+            <div class="account-icons">
+                <a href="/customer/cart.html" title="Keranjang Belanja" style="margin-left: 10px;">
+                    🛒 <span id="cartCount" class="badge bg-danger"></span>
+                </a>
+                <a href="#" id="logoutBtn" title="Keluar">👤</a>
+            </div>
+        </div>
+        <div class="navbar-links mt-3">
+            <a href="#" class="active">Beranda</a>
+            <a href="#">Toko</a>
+            <a href="#">Makanan</a>
+            <a href="#">Minuman</a>
+            <a href="#" class="text-danger">Hampir Selesai <span class="badge bg-danger text-white badge-sale">SALE</span></a>
+        </div>
+    </nav>
+
+<!-- Promo Banner -->
+<div class="promo-banner">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-7">
+                <h4 class="text-warning">Diskon Harian</h4>
+                <h1 class="text-white">Belanja bersama kami untuk kualitas yang lebih baik</h1>
+                <p class="text-white">Kami telah menyiapkan diskon khusus untuk Anda pada produk kebutuhan sehari-hari.</p>
+            </div>
+            <div class="col-md-5">
+                <img src="../img/promo.jpg" alt="Promo" class="promo-image">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Product Section -->
+<main class="container py-5">
+    <!-- Notification area -->
+    <div id="notification" class="alert" style="display: none;"></div>
+    
+    <!-- Products by Category -->
+    <div id="product-list">
+        <!-- Categories will be loaded here -->
+        <div class="category-block">
+            <div class="category-header">
+                <h2 class="category-title">Minuman</h2>
+                <a href="#" class="see-all">Lihat Semua</a>
+            </div>
+            <div class="products-slider">
+                <button class="scroll-button left">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <div class="products-row">
+                    <!-- Products will be loaded here -->
+                </div>
+                <button class="scroll-button right">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Other categories will follow same pattern -->
+    </div>
+</main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 newsletter-section">
+                    <h6>Bergabunglah dengan buletin kami secara gratis</h6>
+                    <p>Daftar sekarang untuk mendapatkan update terkini tentang promosi & kupon.</p>
+                    <form id="newsletterForm">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Masukkan Email Anda">
+                            <button class="btn btn-danger" type="submit">KIRIM</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4 contact-info">
+                    <h6>Butuh Bantuan?</h6>
+                    <p>Senin-Jumat: 08 pagi - 09 malam</p>
+                    <p><b>62 188 1881 1111</b></p>
+                    <p>Email: info@mymarketu.com</p>
+                </div>
+
+                <div class="col-md-4 quick-links">
+                    <h6>Bantuan</h6>
+                    <ul>
+                        <li><a href="#">Pesanan Anda</a></li>
+                        <li><a href="#">Pengembalian</a></li>
+                        <li><a href="#">Pengiriman</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom text-center mt-3">
+                <p>&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../js/customer/dashboard.js"></script>
+    <script src="../js/cart.js"></script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Manajemen Produk - MyMarketU</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <div class="flex">
+        <!-- Sidebar -->
+        <div class="w-64 bg-red-600 min-h-screen fixed">
+            <div class="p-4">
+                <div class="flex items-center mb-8">
+                    <img src="/img/a.png" alt="MyMarketU Logo" class="h-8 w-auto mr-2">
+                    <div class="text-white text-2xl font-bold">MyMarketU</div>
+                </div>
+                <nav>
+                    <a href="dashboard.html" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-chart-line mr-3"></i>
+                        Beranda
+                    </a>
+                    <a href="products.html" class="flex items-center text-white p-3 mb-2 bg-red-500 rounded">
+                        <i class="fas fa-box mr-3"></i>
+                        Produk
+                    </a>
+                    <a href="orders.html" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-shopping-cart mr-3"></i>
+                        Pesanan
+                    </a>
+                    <a href="customers.html" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-users mr-3"></i>
+                        Pelanggan
+                    </a>
+                    <a href="reports.html" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-file-alt mr-3"></i>
+                        Laporan
+                    </a>
+                    <a href="settings.html" class="flex items-center text-gray-300 p-3 mb-2 hover:bg-red-500 rounded">
+                        <i class="fas fa-cog mr-3"></i>
+                        Pengaturan
+                    </a>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 flex-1">
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm">
+                <div class="flex justify-between items-center px-8 py-4">
+                    <div class="text-2xl text-gray-800">Manajemen Produk</div>
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center">
+                            <img src="/img/profile/default.png" alt="Profile" class="h-8 w-8 rounded-full mr-2" id="adminPhoto">
+                            <span class="text-gray-600" id="adminName">Admin</span>
+                        </div>
+                        <a href="#" id="logoutBtn" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-sign-out-alt"></i> Keluar
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main class="p-8">
+                <!-- Notification container -->
+                <div id="notification" class="hidden fixed top-4 right-4 p-4 rounded shadow-lg"></div>
+
+                <!-- Tambah Produk Button -->
+                <div class="mb-6">
+                    <button onclick="showAddForm()" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded flex items-center">
+                        <i class="fas fa-plus mr-2"></i> Tambah Produk Baru
+                    </button>
+                </div>
+
+                <!-- Form Tambah/Edit Produk - Hidden by Default -->
+                <div class="hidden bg-white rounded-lg shadow-md p-6 mb-6" id="addProductForm">
+                    <h2 class="text-xl font-bold mb-4">Tambah Produk Baru</h2>
+                    <form id="productForm" class="space-y-4" enctype="multipart/form-data">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Nama Produk</label>
+                            <input type="text" name="nama" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Kategori</label>
+                            <select name="kategori" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                                <option value="">Pilih Kategori</option>
+                                <option value="Makanan">Makanan</option>
+                                <option value="Minuman">Minuman</option>
+                                <option value="Kebutuhan">Kebutuhan</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Harga (Rupiah)</label>
+                                <input type="number" name="harga" min="0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-2">Stok</label>
+                                <input type="number" name="stok" min="0" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Deskripsi</label>
+                            <textarea name="deskripsi" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Gambar Produk</label>
+                            <input type="file" name="gambar" accept="image/*" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">Diskon (%)</label>
+                            <input type="number" name="diskon" min="0" max="100" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                                Simpan Produk
+                            </button>
+                            <button type="button" onclick="hideAddForm()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                                Batal
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabel Produk -->
+                <div class="bg-white rounded-lg shadow-md">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-800">Daftar Produk</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full" id="productTable">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Gambar</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Harga</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stok</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be loaded by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../js/admin/products.js"></script>
+</body>
+</html>

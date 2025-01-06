@@ -1,0 +1,1023 @@
+.navbar {
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+.search-bar {
+    flex: 1;
+    margin: 0 20px;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-links a {
+    color: black;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.navbar-links a:hover {
+    color: #c8102e;
+    font-weight: bold;
+}
+
+.badge-sale {
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+
+.account-icons a {
+    margin: 0 10px;
+    color: black;
+    text-decoration: none;
+}
+
+.account-icons a:hover {
+    color: #c8102e;
+}
+
+
+
+.footer {
+    margin-top: 150px; 
+    background-color: #f8f9fa;
+    padding: 40px 20px 30px;
+}
+
+.footer h6 {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.footer a {
+    color: #6c757d;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+.footer .newsletter-section {
+    margin-bottom: 30px;
+}
+
+.footer .contact-info p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.footer .quick-links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer .quick-links ul li {
+    margin-bottom: 10px;
+}
+
+.footer .quick-links ul li a {
+    font-size: 14px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #dee2e6;
+    padding-top: 10px;
+    margin-top: 20px;
+    font-size: 14px;
+    text-align: center;
+    color: #6c757d;
+}
+
+/* Tambahkan di bagian style di HTML atau di file CSS terpisah */
+
+.product-box {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: center;
+    background-color: white;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 400px;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-image-container {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.product-img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 0 auto;
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.product-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px 0;
+    color: #333;
+    height: 40px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-category {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.price-container {
+    margin: 10px 0;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 14px;
+    display: block;
+}
+
+.discounted-price {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+}
+
+.current-price {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.stock-info {
+    font-size: 14px;
+    color: #28a745;
+    margin: 5px 0;
+}
+
+.stock-info.low-stock {
+    color: #dc3545;
+}
+
+.add-to-cart-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+    background-color: #c82333;
+}
+
+.add-to-cart-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .product-box {
+        height: auto;
+        min-height: 350px;
+    }
+    
+    .product-img {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .product-title {
+        height: auto;
+        max-height: 40px;
+    }
+}
+
+/* Tambahkan ke style.css */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.product-card {
+    z-index: 1; /* Tambahkan ini */
+    position: relative; /* Tambahkan ini */
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    position: relative;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.discount-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #dc3545;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+.product-image {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.product-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.5rem 0;
+    color: #333;
+}
+
+.product-category {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.product-price {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.stock-info {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.stock-high {
+    color: #28a745;
+}
+
+.stock-medium {
+    color: #ffc107;
+}
+
+.stock-low {
+    color: #dc3545;
+}
+
+.quantity-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.add-to-cart-btn {
+    width: 100%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.add-to-cart-btn:hover:not(:disabled) {
+    background: #c82333;
+}
+
+.add-to-cart-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Welcome section styling */
+.welcome-section {
+    text-align: center;
+    padding: 2rem 0;
+    margin-bottom: 2rem;
+}
+
+.welcome-section h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+
+@media (max-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .product-image {
+        height: 150px;
+    }
+}
+
+.promo-banner {
+    background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+    padding: 3rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    color: white;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+.promo-banner h4 {
+    color: #ffc107;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.promo-banner h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    color: white;
+}
+
+.promo-banner p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+.promo-image {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Kategori slider styles */
+.category-section {
+    margin: 2rem 0;
+    position: relative;
+}
+
+.category-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.category-title a {
+    font-size: 1rem;
+    color: #dc3545;
+    text-decoration: none;
+}
+
+.product-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    gap: 1rem;
+    padding: 1rem 0;
+    position: relative;
+}
+
+.product-slider::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+.slider-wrapper {
+    position: relative;
+    padding: 0 2rem;
+}
+
+.slider-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(220, 53, 69, 0.9);
+    border-radius: 50%;
+    border: none;
+    color: white;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.slider-arrow:hover {
+    background: rgba(220, 53, 69, 1);
+}
+
+.slider-arrow.prev {
+    left: 0;
+}
+
+.slider-arrow.next {
+    right: 0;
+}
+
+.slider-arrow i {
+    font-size: 1.2rem;
+}
+
+
+
+/* Tambahkan CSS ini */
+.category-block {
+    margin-top: 4rem; /* Sebelumnya 2rem */
+    position: relative;
+    z-index: 1;
+}
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.category-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.see-all {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.products-slider {
+    position: relative;
+    padding: 0 40px;
+}
+
+.products-row {
+    display: flex;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.products-row::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card {
+    min-width: 200px;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.scroll-button.left {
+    left: 0;
+}
+
+.scroll-button.right {
+    right: 0;
+}
+
+.product-image {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 0.5rem;
+}
+
+.product-name {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    height: 2.4em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.product-price {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.8rem;
+    display: block;
+}
+
+.add-to-cart {
+    width: 100%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.5rem;
+}
+
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.category-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+}
+
+.see-all {
+    color: #dc3545;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.products-slider {
+    position: relative;
+    margin: 0 -1rem;
+    padding: 0 2rem;
+}
+
+.products-row {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 1rem;
+    padding: 0.5rem 0;
+}
+
+.products-row::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card {
+    min-width: 200px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.discount-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #dc3545;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.product-image-container {
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.product-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.product-name {
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    height: 2.4em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.price-section {
+    margin: 0.5rem 0;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.8rem;
+}
+
+.final-price {
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.stock-badge {
+    font-size: 0.8rem;
+    color: #28a745;
+}
+
+.stock-badge.low-stock {
+    color: #dc3545;
+}
+
+.add-cart-btn {
+    width: 100%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.add-cart-btn:hover:not(:disabled) {
+    background: #c82333;
+}
+
+.add-cart-btn.disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.scroll-button.left {
+    left: 0.5rem;
+}
+
+.scroll-button.right {
+    right: 0.5rem;
+}
+
+.scroll-button:hover {
+    background: #f8f9fa;
+}
+
+.products-slider {
+    position: relative;
+    padding: 0 2rem;
+    margin: 1rem 0;
+    overflow: hidden; /* Tambahkan ini */
+}
+
+
+.products-row {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    overflow-x: scroll; /* Ubah dari auto ke scroll */
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    white-space: nowrap; /* Tambahkan ini */
+    width: 100%; /* Tambahkan ini */
+}
+.products-row::-webkit-scrollbar {
+    display: none;
+}
+
+.product-card {
+    min-width: 200px; /* Set lebar minimum */
+    width: 200px; /* Set lebar tetap */
+    flex-shrink: 0; /* Mencegah card menyusut */
+}
+
+.scroll-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    display: none; /* Hidden by default */
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.scroll-button:hover {
+    background: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.scroll-button.left {
+    left: 0;
+}
+
+.scroll-button.right {
+    right: 0;
+    display: flex; /* Selalu tampilkan tombol kanan */
+}
+
+.scroll-button i {
+    color: #333;
+    font-size: 1.2rem;
+}
+
+/* Tambahkan smooth transition untuk tombol */
+.scroll-button {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.scroll-button.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Hover effect untuk container slider */
+.products-slider:hover .scroll-button.visible {
+    opacity: 1;
+}
+/* Cart Styles */
+.cart-items {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem;
+}
+
+.cart-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.cart-item:last-child {
+    border-bottom: none;
+}
+
+.cart-item-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 1rem;
+}
+
+.cart-item-info {
+    flex-grow: 1;
+}
+
+.cart-item-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.cart-item-price {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.cart-item-original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.9rem;
+}
+
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.quantity-btn {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.quantity-input {
+    width: 50px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 0.25rem;
+}
+
+.remove-item {
+    color: #dc3545;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.cart-summary {
+    position: sticky;
+    top: 1rem;
+}
+
+.add-to-cart-form {
+    margin-top: 1rem;
+}
+
+.quantity-control {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    padding: 0.25rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.add-cart-btn {
+    width: 100%;
+    padding: 0.5rem;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.add-cart-btn:hover:not(:disabled) {
+    background: #c82333;
+}
+
+.add-cart-btn.disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+}
+
+.badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    padding: 0.25rem 0.5rem;
+    border-radius: 50%;
+    font-size: 0.75rem;
+}
+.product-image {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    margin: 0 auto 10px;
+    background: #f8f9fa; /* Warna background jika gambar tidak ada */
+}
+
+.product-image-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.products-slider, .products-row {
+    position: static; /* Ubah dari relative */
+}
