@@ -3,54 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Dashboard - MyMarketU</title>
+    <title>Riwayat Pesanan - MyMarketU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <style>
-        .product-box {
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            background-color: #f9f9f9;
-            transition: transform 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 400px;
-        }
-
-        .product-box:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .product-img {
-            width: 150px;
-            height: 150px;
-            object-fit: contain;
-            margin: 0 auto 10px;
-        }
-
-        .product-box h5 {
-            font-size: 16px;
-            margin: 10px 0;
-            height: auto;
-            white-space: normal;
-            overflow: visible;
-            text-overflow: clip;
-            word-wrap: break-word;
-        }
-    </style>
+    <link href="../css/style.css" rel="stylesheet">
 </head>
 <body>
-
-<!-- Navbar -->
+    <!-- Navbar -->
 <nav class="navbar">
     <div class="d-flex align-items-center w-100">
         <a class="navbar-brand" href="../customer/dashboard.html">
@@ -83,8 +42,8 @@
                                 <i class="bi bi-person"></i>
                             </div>
                             <div class="ms-2">
-                                <div class="fw-bold" id="userName"></div>
-                                <div class="small text-muted" id="userEmail"></div>
+                                <div class="fw-bold" id="userName">Loading...</div>
+                                <div class="small text-muted" id="userEmail">Loading...</div>
                             </div>
                         </div>
                     </li>
@@ -112,67 +71,83 @@
         <a href="#">Kebutuhan</a>
     </div>
 </nav>
-
-<!-- Promo Banner -->
-<div class="promo-banner">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-md-7">
-                <h4 class="text-warning">MyMarketU</h4>
-                <h1 class="text-white">Belanja bersama kami untuk kualitas yang lebih baik</h1>
-                <p class="text-white">Kami telah menyiapkan diskon khusus untuk Anda pada produk kebutuhan sehari-hari.</p>
-            </div>
-            <div class="col-md-5">
-                <img src="../images/banner.png" alt="Promo" class="promo-image">
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Product Section -->
-<main class="container py-5">
-    <!-- Notification area -->
-    <div id="notification" class="alert" style="display: none;"></div>
-    
-    <!-- Products by Category -->
-    <div id="product-list">
-        <!-- Categories will be loaded here -->
-        <div class="category-block">
-            <div class="category-header">
-                <h2 class="category-title">Minuman</h2>
-                <a href="#" class="see-all">Lihat Semua</a>
-            </div>
-            <div class="products-slider">
-                <button class="scroll-button left">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <div class="products-row">
-                    <!-- Products will be loaded here -->
+       <!-- Main Content -->
+       <main class="container py-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center" 
+                                 style="width: 40px; height: 40px">
+                                <i class="bi bi-person"></i>
+                            </div>
+                            <div class="ms-3">
+                                <div class="fw-bold" id="sidebarUserName"></div>
+                                <div class="text-muted" id="sidebarUserEmail"></div>
+                            </div>
+                        </div>
+                        <div class="nav flex-column nav-pills">
+                            <a href="orders.html" class="nav-link active">
+                                <i class="bi bi-clock-history me-2"></i>
+                                Riwayat Pesanan
+                            </a>
+                            <a href="profile.html" class="nav-link">
+                                <i class="bi bi-gear me-2"></i>
+                                Pengaturan Akun
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <button class="scroll-button right">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+            </div>
+
+            <!-- Order List -->
+            <div class="col-md-9">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="card-title mb-0">Riwayat Pesanan</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="order-list">
+                            <!-- Orders will be loaded here -->
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+    </main>
 
-        <!-- Other categories will follow same pattern -->
+    <!-- Order Detail Modal -->
+    <div class="modal fade" id="orderDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title">Detail Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="orderDetailContent">
+                    <!-- Order detail will be loaded here -->
+                </div>
+            </div>
+        </div>
     </div>
-</main>
 
     <!-- Footer -->
-    <footer class="footer">
-            <div class="footer-bottom text-center mt-3">
-                <p>&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
+    <footer class="footer mt-5">
+            <div class="text-center py-3 border-top mt-4">
+                <p class="mb-0">&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
             </div>
         </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="../js/customer/dashboard.js"></script>
-    <script src="../js/cart.js"></script>
+    <script src="../js/customer/orders.js"></script>
 </body>
 </html>
-

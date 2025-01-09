@@ -3,35 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Keranjang - MyMarketU</title>
+    <title>Kategori Makanan - MyMarketU</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
-
-<style>
-    html, body {
-    height: 100%; /* Pastikan body dan html memenuhi tinggi layar */
-    display: flex;
-    flex-direction: column; /* Atur elemen mengikuti kolom */
-    margin: 0; /* Hilangkan margin bawaan */
-}
-
-main {
-    flex: 1; /* Membuat area utama (konten) fleksibel */
-}
-
-.footer {
-    margin-top: auto; /* Pindahkan footer ke bawah */
-    background-color: #f8f9fa; /* Sesuaikan warna */
-    padding: 10px 0;
-    text-align: center;
-}
-</style>
- 
-<body>
+<body data-category="Makanan">
     <!-- Navbar -->
     <nav class="navbar">
         <div class="d-flex align-items-center w-100">
@@ -48,7 +26,6 @@ main {
                     <span id="cartCount" class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill" style="display: none;"></span>
                 </a>
                 
-                <!-- Profile Dropdown - Updated with proper Bootstrap classes -->
                 <div class="dropdown ms-3">
                     <button class="btn btn-link dropdown-toggle d-flex align-items-center text-dark text-decoration-none" 
                             type="button" 
@@ -65,8 +42,8 @@ main {
                                     <i class="bi bi-person"></i>
                                 </div>
                                 <div class="ms-2">
-                                    <div class="fw-bold" id="userName">Loading...</div>
-                                    <div class="small text-muted" id="userEmail">Loading...</div>
+                                    <div class="fw-bold" id="sidebarUsername">Loading...</div>
+                                    <div class="small text-muted" id="sidebarEmail">Loading...</div>
                                 </div>
                             </div>
                         </li>
@@ -88,62 +65,76 @@ main {
             </div>
         </div>
         <div class="navbar-links mt-3">
-            <a href="../customer/dashboard.html" class="active">Beranda</a>
-            <a href="#">Makanan</a>
-            <a href="#">Minuman</a>
-            <a href="#">Kebutuhan</a>
+            <a href="../customer/dashboard.html">Beranda</a>
+            <a href="../customer/category/makanan.html" class="active">Makanan</a>
+            <a href="../customer/category/minuman.html">Minuman</a>
+            <a href="../customer/category/kebutuhan.html">Kebutuhan</a>
         </div>
     </nav>
 
-        <!-- Main Content -->
-        <main class="container py-5">
-            <h2 class="mb-4">Keranjang Belanja</h2>
-            
+    <!-- Main Content -->
+    <main class="container py-5">
+        <div class="row">
+            <!-- Category Header -->
+            <div class="col-12 mb-4">
+                <h2 class="category-title">Makanan</h2>
+                <p class="text-muted">Temukan berbagai makanan berkualitas</p>
+            </div>
+
+            <!-- Products Container -->
+            <div class="col-12">
+                <div id="products-container" class="product-grid">
+                    <!-- Products will be loaded here by JavaScript -->
+                    <div class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer mt-auto">
+        <div class="container">
             <div class="row">
-                <!-- Cart Items -->
-                <div class="col-md-8">
-                    <div class="cart-items">
-                        <!-- Items will be loaded dynamically -->
-                    </div>
+                <div class="col-md-4 newsletter-section">
+                    <h6>Bergabunglah dengan buletin kami secara gratis</h6>
+                    <p>Daftar sekarang untuk mendapatkan update terkini tentang promosi & kupon.</p>
+                    <form id="newsletterForm">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Masukkan Email Anda">
+                            <button class="btn btn-danger" type="submit">KIRIM</button>
+                        </div>
+                    </form>
                 </div>
-                
-                <!-- Cart Summary -->
-                <div class="col-md-4">
-                    <div class="cart-summary bg-white p-4 rounded shadow-sm">
-                        <h4 class="mb-4">Ringkasan Belanja</h4>
-                        <div class="summary-item d-flex justify-content-between my-3">
-                            <span>Total Harga</span>
-                            <span id="totalPrice">Rp 0</span>
-                        </div>
-                        <div class="summary-item d-flex justify-content-between my-3 text-danger">
-                            <span>Total Diskon</span>
-                            <span id="totalDiscount">-Rp 0</span>
-                        </div>
-                        <hr>
-                        <div class="summary-total d-flex justify-content-between my-3">
-                            <span class="fw-bold">Total Bayar</span>
-                            <span class="fw-bold" id="grandTotal">Rp 0</span>
-                        </div>
-                        <button id="checkoutBtn" class="btn btn-danger w-100 py-3" onclick="handleCheckout()">
-                            Lanjut ke Pembayaran
-                        </button>
-                    </div>
+                <div class="col-md-4 contact-info">
+                    <h6>Butuh Bantuan?</h6>
+                    <p>Senin-Jumat: 08 pagi - 09 malam</p>
+                    <p><b>62 188 1881 1111</b></p>
+                    <p>Email: info@mymarketu.com</p>
+                </div>
+                <div class="col-md-4 quick-links">
+                    <h6>Bantuan</h6>
+                    <ul>
+                        <li><a href="#">Pesanan Anda</a></li>
+                        <li><a href="#">Pengembalian</a></li>
+                        <li><a href="#">Pengiriman</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
                 </div>
             </div>
-        </main>
-    
-        <!-- Footer -->
-        <footer class="footer mt-auto">
-                <div class="footer-bottom text-center mt-3">
-                    <p>&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
-                </div>
+            <div class="footer-bottom text-center mt-3">
+                <p>&copy; 2024 MyMarketU. Semua hak dilindungi.</p>
             </div>
-        </footer>
-    
-        <!-- Scripts -->
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-        <script src="../js/customer/cart.js"></script>
-    </body>
-    </html>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="../js/customer/category.js"></script>
+</body>
+</html>

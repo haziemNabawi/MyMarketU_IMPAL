@@ -2,21 +2,12 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     loadCart();
-    setupEventListeners();
 });
-
-function setupEventListeners() {
-    // Checkout button
-    const checkoutBtn = document.getElementById('checkoutBtn');
-    if (checkoutBtn) {
-        checkoutBtn.addEventListener('click', handleCheckout);
-    }
-}
 
 async function loadCart() {
     try {
         const response = await fetch('/api/cart', {
-            credentials: 'include' // Add this
+            credentials: 'include'
         });
         if (!response.ok) throw new Error('Failed to load cart');
         const cartData = await response.json();
@@ -31,56 +22,165 @@ async function loadCart() {
 
 function displayCart(cartData) {
     const cartContainer = document.querySelector('.cart-items');
-    console.log('Cart data:', cartData); // Debug
-
+    
     if (!cartData.items || cartData.items.length === 0) {
         cartContainer.innerHTML = `
             <div class="text-center py-5">
                 <h4>Keranjang Belanja Kosong</h4>
-                <a href="/customer/dashboard.html" class="btn btn-danger">Belanja Sekarang</a>
+                <a href="/customer/dashboard.html" class="btn btn-danger mt-3">Belanja Sekarang</a>
             </div>
         `;
         return;
     }
 
     cartContainer.innerHTML = cartData.items.map(item => `
-        <div class="cart-item" data-id="${item.id}">
-            <img src="/images/${item.namaFileGambar || 'default.png'}" 
-                 alt="${item.nama}"
-                 class="cart-item-image"
-                 onerror="this.src='../images/default-product.png'">
-            
-            <div class="cart-item-info">
-                <h5 class="cart-item-title">${item.nama}</h5>
-                <div class="price-section mb-2">
-                    ${item.diskon > 0 ? `
-                        <span class="cart-item-original-price">Rp ${formatNumber(item.harga)}</span>
-                        <span class="cart-item-price">Rp ${formatNumber(item.harga * (1 - item.diskon/100))}</span>
-                    ` : `
-                        <span class="cart-item-price">Rp ${formatNumber(item.harga)}</span>
-                    `}
+        <div class="cart-item bg-white rounded shadow-sm mb-3 p-3">
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <img src="${item.namaFileGambar ? '/images/' + item.namaFileGambar : '../images/default-product.png'}" 
+                         alt="${item.nama}"
+                         class="rounded"
+                         style="width: 100px; height: 100px; object-fit: cover;"
+                         onerror="this.src='../images/default-product.png'">
                 </div>
-                <div class="quantity-control">
-                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
-                    <input type="number" class="quantity-input" 
-                           value="${item.quantity}" 
-                           min="1" 
-                           max="${item.stok}"
-                           onchange="updateQuantity(${item.id}, null, this.value)">
-                    <button class="quantity-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                
+                <div class="flex-grow-1">
+                    <h5 class="mb-1">${item.nama}</h5>
+                    <div class="mb-2">
+                        ${item.diskon > 0 ? `
+                            <span class="text-decoration-line-through text-muted me-2">
+                                Rp ${formatNumber(item.harga)}
+                            </span>
+                        ` : ''}
+                        <span class="text-danger fw-bold">
+                            Rp ${formatNumber(item.harga * (1 - item.diskon/100))}
+                        </span>
+                        ${item.diskon > 0 ? `
+                            <span class="badge bg-danger ms-2">-${item.diskon}%</span>
+                        ` : ''}
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <button type="button" 
+                                class="btn btn-outline-secondary"
+                                onclick="handleQuantityUpdate(${item.product_id}, ${item.quantity - 1})"
+                                ${item.quantity <= 1 ? 'disabled' : ''}>
+                            -
+                        </button>
+                        <span class="mx-3">${item.quantity}</span>
+                        <button type="button" 
+                                class="btn btn-outline-secondary"
+                                onclick="handleQuantityUpdate(${item.product_id}, ${item.quantity + 1})"
+                                ${item.quantity >= item.stok ? 'disabled' : ''}>
+                            +
+                        </button>
+                        <button type="button" 
+                                class="btn btn-outline-danger ms-3"
+                                onclick="handleRemoveItem(${item.product_id})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="ms-3 text-end">
+                    <div class="text-muted">Subtotal</div>
+                    <div class="text-danger fw-bold">
+                        Rp ${formatNumber(item.harga * (1 - item.diskon/100) * item.quantity)}
+                    </div>
                 </div>
             </div>
-
-            <button class="remove-item" onclick="removeItem(${item.id})">
-                <i class="fas fa-trash"></i>
-            </button>
         </div>
     `).join('');
 }
 
+async function handleQuantityUpdate(productId, newQuantity) {
+    try {
+        // Basic validation
+        if (newQuantity < 1) {
+            showNotification('Jumlah minimal 1', 'error');
+            return;
+        }
+
+        // Get current cart state
+        const cartResponse = await fetch('/api/cart', {
+            credentials: 'include'
+        });
+        const cartData = await cartResponse.json();
+        const item = cartData.items.find(item => item.product_id === productId);
+        
+        if (!item) {
+            showNotification('Produk tidak ditemukan', 'error');
+            return;
+        }
+
+        // Check stock
+        if (newQuantity > item.stok) {
+            showNotification(`Stok tidak mencukupi. Maksimal ${item.stok}`, 'error');
+            return;
+        }
+
+        // Send update request
+        const response = await fetch('/api/cart/update', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                productId: productId,
+                quantity: newQuantity
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            loadCart();
+            showNotification('Jumlah berhasil diperbarui', 'success');
+        } else {
+            throw new Error(result.message || 'Gagal mengubah jumlah');
+        }
+    } catch (error) {
+        console.error('Error updating quantity:', error);
+        showNotification(error.message || 'Gagal mengubah jumlah', 'error');
+    }
+}
+
+async function handleRemoveItem(productId) {
+    if (!confirm('Apakah Anda yakin ingin menghapus produk ini dari keranjang?')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/cart/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                productId: productId
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            await loadCart(); // Reload cart after successful removal
+            showNotification('Produk berhasil dihapus dari keranjang', 'success');
+        } else {
+            throw new Error(result.message || 'Gagal menghapus produk');
+        }
+    } catch (error) {
+        console.error('Error removing item:', error);
+        showNotification(error.message || 'Gagal menghapus produk', 'error');
+        await loadCart(); // Reload cart in case of error
+    }
+}
+
 function updateSummary(cartData) {
-    const totalPrice = cartData.items.reduce((sum, item) => sum + (item.harga * item.quantity), 0);
-    const totalDiscount = cartData.items.reduce((sum, item) => 
+    const items = cartData.items || [];
+    const totalPrice = items.reduce((sum, item) => sum + (item.harga * item.quantity), 0);
+    const totalDiscount = items.reduce((sum, item) => 
         sum + (item.harga * item.quantity * (item.diskon/100)), 0);
     const grandTotal = totalPrice - totalDiscount;
 
@@ -89,71 +189,23 @@ function updateSummary(cartData) {
     document.getElementById('grandTotal').textContent = `Rp ${formatNumber(grandTotal)}`;
 }
 
-async function updateQuantity(productId, change, newValue = null) {
-    try {
-        const quantity = newValue !== null ? newValue : 
-            parseInt(document.querySelector(`.cart-item[data-id="${productId}"] .quantity-input`).value) + change;
-
-        const response = await fetch('/api/cart/update', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                productId,
-                quantity
-            })
-        });
-
-        if (!response.ok) throw new Error('Failed to update quantity');
-        
-        loadCart(); // Reload cart after update
-    } catch (error) {
-        console.error('Error updating quantity:', error);
-        showNotification('Gagal mengubah jumlah', 'error');
-    }
-}
-
-async function removeItem(productId) {
-    if (!confirm('Apakah Anda yakin ingin menghapus produk ini dari keranjang?')) return;
-
-    try {
-        const response = await fetch('/api/cart/remove', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ productId })
-        });
-
-        if (!response.ok) throw new Error('Failed to remove item');
-        
-        loadCart(); // Reload cart after removal
-        showNotification('Produk berhasil dihapus dari keranjang', 'success');
-    } catch (error) {
-        console.error('Error removing item:', error);
-        showNotification('Gagal menghapus produk', 'error');
-    }
-}
-
 async function handleCheckout() {
     try {
         const response = await fetch('/api/cart/checkout', {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'include'
         });
 
-        if (!response.ok) throw new Error('Checkout failed');
-        
         const result = await response.json();
+        
         if (result.success) {
-            showNotification('Checkout berhasil!', 'success');
-            window.location.href = '/customer/orders.html';
+            window.location.href = '/customer/checkout.html';
         } else {
-            throw new Error(result.message || 'Checkout failed');
+            throw new Error(result.message || 'Checkout gagal');
         }
     } catch (error) {
         console.error('Error during checkout:', error);
-        showNotification('Gagal melakukan checkout', 'error');
+        showNotification(error.message || 'Gagal melakukan checkout', 'error');
     }
 }
 
@@ -166,7 +218,8 @@ function showNotification(message, type = 'info') {
         closeButton: true,
         progressBar: true,
         positionClass: "toast-top-right",
-        timeOut: 3000
+        timeOut: 3000,
+        preventDuplicates: true
     };
     
     switch(type) {
