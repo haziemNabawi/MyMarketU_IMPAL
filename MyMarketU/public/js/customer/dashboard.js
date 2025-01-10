@@ -282,8 +282,17 @@ function displayCategoryView(category, products) {
 }
 
 function renderProductCards(products) {
-    return products.map(product => `
-        <div class="product-card">
+    // Buat container untuk produk dengan display flex
+    const productsContainer = document.createElement('div');
+    productsContainer.className = 'products-container';
+    productsContainer.style.display = 'flex';
+    productsContainer.style.flexWrap = 'wrap';
+    productsContainer.style.gap = '1rem';
+    productsContainer.style.justifyContent = 'flex-start';
+
+    const productCards = products.map(product => `
+            <div class="product-card" style="cursor: pointer" 
+            onclick="window.location.href='product-detail.html?id=${product.id}'">
             <div class="product-image-container">
                 <img src="${product.namaFileGambar ? '/images/' + product.namaFileGambar : '/images/default-product.png'}" 
                      alt="${product.nama}" 
@@ -327,6 +336,9 @@ function renderProductCards(products) {
             </div>
         </div>
     `).join('');
+
+    productsContainer.innerHTML = productCards;
+    return productsContainer.outerHTML;
 }
 
 function getCategoryDescription(category) {

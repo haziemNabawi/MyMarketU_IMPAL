@@ -4,8 +4,44 @@ document.addEventListener('DOMContentLoaded', async function() {
     await loadCartData();  // Load cart data pertama
     loadOrderHistory();    // Load riwayat pesanan
     setupEventListeners(); // Setup event listeners
-    checkAdminRole();      // Cek role admin
+    loadUserProfile();
+
+    const navLinks = document.querySelectorAll('.navbar-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = link.dataset.category;
+            
+            if (category === 'beranda') {
+                window.location.href = '/customer/dashboard.html';
+            } else {
+                window.location.href = `/customer/dashboard.html?category=${category}`;
+            }
+        });
+    });
 });
+
+async function loadUserProfile() {
+    try {
+        const response = await fetch('/api/user/profile', {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                // Update profile elements
+                const userNameElements = document.querySelectorAll('#userName');
+                const userEmailElements = document.querySelectorAll('#userEmail');
+                
+                userNameElements.forEach(el => el.textContent = data.username);
+                userEmailElements.forEach(el => el.textContent = data.email);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading profile:', error);
+    }
+}
 
 function setupEventListeners() {
     // Setup WhatsApp checkout button

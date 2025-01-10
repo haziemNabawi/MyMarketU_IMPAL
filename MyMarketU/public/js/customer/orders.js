@@ -16,11 +16,69 @@ document.addEventListener('DOMContentLoaded', async function() {
             loadOrders(1)
         ]);
 
+        // Add navigation functionality
+        const navLinks = document.querySelectorAll('.navbar-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = link.dataset.category;
+                
+                if (category === 'beranda') {
+                    window.location.href = '/customer/dashboard.html';
+                } else {
+                    window.location.href = `/customer/dashboard.html?category=${category}`;
+                }
+            });
+        });
+
     } catch (error) {
         console.error('Error:', error);
         showNotification('Error loading data', 'error');
     }
 });
+
+
+function setupEventListeners() {
+    const profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', handleProfileUpdate);
+    }
+
+    // Tambahkan event listener untuk logout
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+}
+
+async function handleLogout() {
+    try {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            toastr.success('Berhasil logout');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1000);
+        } else {
+            toastr.error(data.message || 'Gagal logout');
+        }
+    } catch (error) {
+        console.error('Error during logout:', error);
+        toastr.error('Gagal logout');
+    }
+}
+
+// Add event listener in setupEventListeners()
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', handleLogout);
+}
 
 async function loadUserProfile() {
     try {

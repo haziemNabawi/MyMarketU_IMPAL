@@ -2,6 +2,21 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     loadCart();
+    loadUserProfile();
+
+    const navLinks = document.querySelectorAll('.navbar-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const category = link.dataset.category;
+            
+            if (category === 'beranda') {
+                window.location.href = '/customer/dashboard.html';
+            } else {
+                window.location.href = `/customer/dashboard.html?category=${category}`;
+            }
+        });
+    });
 });
 
 async function loadCart() {
@@ -212,6 +227,62 @@ async function handleCheckout() {
 function formatNumber(number) {
     return new Intl.NumberFormat('id-ID').format(number);
 }
+
+async function handleLogout(e) {
+    e.preventDefault();
+    try {
+        const response = await fetch('/api/logout', {
+            method: 'POST',
+            credentials: 'include'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification('Berhasil logout', 'success');
+            setTimeout(() => {
+                window.location.href = '/login.html';
+            }, 1000);
+        } else {
+            showNotification(data.message || 'Gagal logout', 'error');
+        }
+    } catch (error) {
+        console.error('Error during logout:', error);
+        showNotification('Gagal logout', 'error');
+    }
+}
+
+function setupEventListeners() {
+        // Logout handler
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout);
+        }
+}
+
+
+async function loadUserProfile() {
+    try {
+        const response = await fetch('/api/user/profile', {
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success) {
+                // Update profile elements
+                const userNameElements = document.querySelectorAll('#userName');
+                const userEmailElements = document.querySelectorAll('#userEmail');
+                
+                userNameElements.forEach(el => el.textContent = data.username);
+                userEmailElements.forEach(el => el.textContent = data.email);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading profile:', error);
+    }
+}
+
 
 function showNotification(message, type = 'info') {
     toastr.options = {

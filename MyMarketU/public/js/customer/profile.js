@@ -1,12 +1,11 @@
-// public/js/customer/profile.js
 document.addEventListener('DOMContentLoaded', async function() {
     toastr.options = {
         closeButton: true,
         progressBar: true,
-        positionClass: "toast-top-right",
+        positionClass: "toast-top-right", 
         timeOut: 3000
     };
-
+ 
     try {
         const authResponse = await fetch('/api/check-auth', {
             credentials: 'include'
@@ -17,15 +16,31 @@ document.addEventListener('DOMContentLoaded', async function() {
             window.location.href = '/login.html';
             return;
         }
-
+ 
         await loadUserProfile();
         setupEventListeners();
-        await updateCartCount(); // Tambahkan ini untuk update cart count
+        await updateCartCount();
+ 
+        // Add navigation handling
+        const navLinks = document.querySelectorAll('.navbar-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const category = link.dataset.category;
+                
+                if (category === 'beranda') {
+                    window.location.href = '/customer/dashboard.html';
+                } else {
+                    window.location.href = `/customer/dashboard.html?category=${category}`;
+                }
+            });
+        });
+ 
     } catch (error) {
         console.error('Error:', error);
         toastr.error('Error loading data');
     }
-});
+ });
 
 function setupEventListeners() {
     const profileForm = document.getElementById('profileForm');
@@ -133,26 +148,33 @@ async function handleProfileUpdate(e) {
     }
 }
 
-async function handleLogout(e) {
-    e.preventDefault();
+async function handleLogout() {
     try {
         const response = await fetch('/api/logout', {
             method: 'POST',
             credentials: 'include'
         });
         
-        if (response.ok) {
+        const data = await response.json();
+        
+        if (data.success) {
             toastr.success('Berhasil logout');
             setTimeout(() => {
                 window.location.href = '/login.html';
             }, 1000);
         } else {
-            throw new Error('Logout failed');
+            toastr.error(data.message || 'Gagal logout');
         }
     } catch (error) {
         console.error('Error during logout:', error);
         toastr.error('Gagal logout');
     }
+}
+
+// Add event listener in setupEventListeners()
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+    logoutBtn.addEventListener('click', handleLogout);
 }
 
 function isValidEmail(email) {

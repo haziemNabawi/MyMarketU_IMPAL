@@ -1012,3 +1012,27 @@ async function getOrderHistory(userId, page = 1, limit = 10) {
         status: order.status || 'pending'
     }));
 }
+
+
+
+// Tambahkan endpoint ini di server.js
+app.get('/api/products/:id', async (req, res) => {
+    try {
+        const [products] = await db.query(
+            'SELECT id, nama, harga, stok, deskripsi, namaFileGambar, diskon, kategori FROM products WHERE id = ?', 
+            [req.params.id]
+        );
+        
+        if (products.length === 0) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        res.json({
+            success: true,
+            product: products[0]
+        });
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
