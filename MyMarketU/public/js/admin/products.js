@@ -1,6 +1,10 @@
 // public/js/admin/products.js
 
 document.addEventListener('DOMContentLoaded', function() {
+    const productForm = document.getElementById('productForm');
+    if (productForm) {
+        productForm.addEventListener('submit', handleSubmitProduct);
+    }
     console.log('Page loaded, loading products...');
     loadProducts();  // Load products immediately
     setupEventListeners();
@@ -101,74 +105,88 @@ function displayProducts(products) {
     `).join('');
 }
 
+// Update form submission handler
 async function handleSubmitProduct(e) {
     e.preventDefault();
     
-    const formData = new FormData(e.target);
-    const productId = formData.get('id');
-    
-    // Validasi form
-    const nama = formData.get('nama');
-    const harga = formData.get('harga');
-    const stok = formData.get('stok');
-    
-    if (!nama || !harga || !stok) {
-        showNotification('Mohon lengkapi semua field yang wajib diisi', 'error');
-        return;
-    }
-
-    const url = productId ? 
-        `/api/admin/products/${productId}` : 
-        '/api/admin/products/add';
-        
-    const method = productId ? 'PUT' : 'POST';
-    
     try {
+        const form = e.target;
+        const formData = new FormData(form);
+        const productId = formData.get('id');
+        
+        // Validate required fields
+        const requiredFields = ['nama', 'kategori', 'harga', 'stok'];
+        for (const field of requiredFields) {
+            if (!formData.get(field)) {
+                throw new Error(`Field ${field} harus diisi`);
+            }
+        }
+
+        // Set up request
+        const url = productId ? 
+            `/api/admin/products/${productId}` : 
+            '/api/admin/products/add';
+            
+        const method = productId ? 'PUT' : 'POST';
+
         const response = await fetch(url, {
             method: method,
             body: formData
         });
-        
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             showNotification(
-                productId ? 'Produk berhasil diperbarui' : 'Produk berhasil ditambahkan', 
+                productId ? 'Produk berhasil diperbarui' : 'Produk berhasil ditambahkan',
                 'success'
             );
             hideAddForm();
             loadProducts();
-            e.target.reset();
+            form.reset();
         } else {
-            showNotification(result.message || 'Gagal menyimpan produk', 'error');
+            throw new Error(result.message || 'Gagal menyimpan produk');
         }
+
     } catch (error) {
-        console.error('Error submitting product:', error);
-        showNotification('Gagal menyimpan produk: ' + error.message, 'error');
+        console.error('Error in handleSubmitProduct:', error);
+        showNotification(error.message, 'error');
     }
 }
 
 async function editProduct(productId) {
     try {
         const response = await fetch(`/api/admin/products/${productId}`);
+        
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         
-        const product = await response.json();
+        const data = await response.json();
         
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to fetch product data');
+        }
+        
+        const product = data.product;
+        
+        // Get and reset the form
         const form = document.getElementById('productForm');
+        form.reset();
+
+        // Fill in the form fields
         form.querySelector('[name="nama"]').value = product.nama;
         form.querySelector('[name="kategori"]').value = product.kategori;
         form.querySelector('[name="harga"]').value = product.harga;
         form.querySelector('[name="stok"]').value = product.stok;
         form.querySelector('[name="deskripsi"]').value = product.deskripsi || '';
         form.querySelector('[name="diskon"]').value = product.diskon || 0;
-        
+
+        // Add or update hidden product ID field
         let idInput = form.querySelector('[name="id"]');
         if (!idInput) {
             idInput = document.createElement('input');
@@ -178,40 +196,51 @@ async function editProduct(productId) {
         }
         idInput.value = productId;
 
+        // Update form title and button
         document.querySelector('#addProductForm h2').textContent = 'Edit Produk';
         document.querySelector('#addProductForm button[type="submit"]').textContent = 'Update Produk';
+
+        // Show the form
         showAddForm();
+
     } catch (error) {
-        console.error('Error getting product details:', error);
-        showNotification('Gagal memuat detail produk: ' + error.message, 'error');
+        console.error('Error in editProduct:', error);
+        showNotification('Gagal memuat data produk: ' + error.message, 'error');
     }
 }
 
 async function deleteProduct(productId) {
-    if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
-        try {
-            const response = await fetch(`/api/admin/products/${productId}`, {
-                method: 'DELETE'
-            });
-            
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                showNotification('Produk berhasil dihapus', 'success');
-                loadProducts();
-            } else {
-                showNotification(result.message || 'Gagal menghapus produk', 'error');
-            }
-        } catch (error) {
-            console.error('Error deleting product:', error);
-            showNotification('Gagal menghapus produk: ' + error.message, 'error');
+    try {
+        if (!confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+            return;
         }
+
+        const response = await fetch(`/api/admin/products/${productId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification('Produk berhasil dihapus', 'success');
+            loadProducts(); // Reload the products table
+        } else {
+            throw new Error(result.message || 'Gagal menghapus produk');
+        }
+
+    } catch (error) {
+        console.error('Error in deleteProduct:', error);
+        showNotification('Gagal menghapus produk: ' + error.message, 'error');
     }
 }
+
 
 async function handleLogout(e) {
     e.preventDefault();
@@ -243,7 +272,8 @@ function showNotification(message, type = 'info') {
         closeButton: true,
         progressBar: true,
         positionClass: "toast-top-right",
-        timeOut: 3000,
+        timeOut: 5000,
+        extendedTimeOut: 2000,
         preventDuplicates: true,
         newestOnTop: true
     };

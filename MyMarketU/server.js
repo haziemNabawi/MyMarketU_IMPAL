@@ -83,72 +83,130 @@ function checkAuth(req, res, next) {
     next();
 }
 
-// Dashboard Stats
-app.get('/api/admin/dashboard-stats', async (req, res) => {
-    try {
-        const [totalSales] = await db.query('SELECT SUM(amount) as total FROM orders');
-        const [totalOrders] = await db.query('SELECT COUNT(*) as total FROM orders');
-        const [totalCustomers] = await db.query('SELECT COUNT(*) as total FROM users WHERE role = "customer"');
-        const [totalProducts] = await db.query('SELECT COUNT(*) as total FROM products');
-
-        res.json({
-            totalSales: totalSales[0].total || 0,
-            totalOrders: totalOrders[0].total || 0,
-            totalCustomers: totalCustomers[0].total || 0,
-            totalProducts: totalProducts[0].total || 0,
-            salesGrowth: 49.5,
-            ordersGrowth: 12.5,
-            customersGrowth: 23.4,
-            productsGrowth: -2.4
-        });
-    } catch (error) {
-        console.error('Error getting dashboard stats:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
-// Recent Orders
 app.get('/api/admin/recent-orders', async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = (page - 1) * limit;
+
+        // Get total count of today's orders
+        const [countResult] = await db.query(`
+            SELECT COUNT(DISTINCT o.id) as total
+            FROM orders o
+            WHERE DATE(o.created_at) = CURDATE()
+        `);
+        
+        // Get paginated orders
         const query = `
             SELECT 
-                o.id, 
+                o.id,
                 u.username as customerName,
                 p.nama as productName,
-                o.amount,
+                oi.quantity,
                 o.status
             FROM orders o
             JOIN users u ON o.user_id = u.id
-            JOIN products p ON o.product_id = p.id
+            JOIN order_items oi ON o.id = oi.order_id
+            JOIN products p ON oi.product_id = p.id
+            WHERE DATE(o.created_at) = CURDATE()
             ORDER BY o.created_at DESC
-            LIMIT 5
+            LIMIT ? OFFSET ?
         `;
-        const [orders] = await db.query(query);
-        res.json(orders);
+        
+        const [orders] = await db.query(query, [limit, offset]);
+
+        res.json({
+            orders,
+            total: countResult[0].total,
+            page,
+            totalPages: Math.ceil(countResult[0].total / limit)
+        });
     } catch (error) {
         console.error('Error getting recent orders:', error);
         res.status(500).json({ error: 'Internal server error' });
+    }
+});
+app.get('/api/admin/dashboard-stats', async (req, res) => {
+    try {
+        // Get total sales from completed orders
+        const [totalSalesResult] = await db.query(`
+            SELECT COALESCE(SUM(total_amount), 0) as total 
+            FROM orders 
+            WHERE status = 'completed'
+        `);
+        
+        // Get total number of orders (all statuses)
+        const [totalOrdersResult] = await db.query(`
+            SELECT COUNT(*) as total 
+            FROM orders
+        `);
+        
+        // Get total number of customers (users with role 'customer')
+        const [totalCustomersResult] = await db.query(`
+            SELECT COUNT(*) as total 
+            FROM users 
+            WHERE role = 'customer'
+        `);
+        
+        // Get total number of products
+        const [totalProductsResult] = await db.query(`
+            SELECT COUNT(*) as total 
+            FROM products
+        `);
+
+        res.json({
+            totalSales: parseFloat(totalSalesResult[0].total) || 0,
+            totalOrders: parseInt(totalOrdersResult[0].total) || 0,
+            totalCustomers: parseInt(totalCustomersResult[0].total) || 0,
+            totalProducts: parseInt(totalProductsResult[0].total) || 0
+        });
+    } catch (error) {
+        console.error('Error getting dashboard stats:', error);
+        res.status(500).json({ 
+            error: 'Internal server error',
+            details: error.message 
+        });
     }
 });
 
 // Low Stock Products
 app.get('/api/admin/low-stock-products', async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const offset = (page - 1) * limit;
+
+        // Get total count of low stock products
+        const [countResult] = await db.query(`
+            SELECT COUNT(*) as total
+            FROM products
+            WHERE stok < 10
+        `);
+        
+        // Get paginated low stock products
         const query = `
             SELECT nama as name, stok as stock
             FROM products
             WHERE stok < 10
             ORDER BY stok ASC
+            LIMIT ? OFFSET ?
         `;
-        const [products] = await db.query(query);
-        res.json(products);
+        
+        const [products] = await db.query(query, [limit, offset]);
+
+        res.json({
+            products,
+            total: countResult[0].total,
+            page,
+            totalPages: Math.ceil(countResult[0].total / limit)
+        });
     } catch (error) {
         console.error('Error getting low stock products:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
 
-// Products API
+
 // Di server.js
 app.get('/api/admin/products', async (req, res) => {
     try {
@@ -180,7 +238,7 @@ app.get('/api/admin/products', async (req, res) => {
 app.post('/api/admin/products/add', upload.single('gambar'), async (req, res) => {
     try {
         const { nama, kategori, harga, stok, deskripsi, diskon } = req.body;
-        const gambar = req.file ? `/images/${req.file.filename}` : '/img/default-product.png';
+        const gambar = req.file ? `/images/${req.file.filename}` : '/images/default-product.png';
         console.log('Data yang diterima:', req.body);
         console.log('File yang diterima:', req.file);
 
@@ -1015,6 +1073,7 @@ async function getOrderHistory(userId, page = 1, limit = 10) {
 
 
 
+
 // Tambahkan endpoint ini di server.js
 app.get('/api/products/:id', async (req, res) => {
     try {
@@ -1034,5 +1093,236 @@ app.get('/api/products/:id', async (req, res) => {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+// Middleware static files
+app.use(express.static('public'));
+app.use('/admin', express.static('public/admin'));
+
+// Admin middleware
+function checkAdmin(req, res, next) {
+    if (!req.session.userId || req.session.role !== 'admin') {
+        return res.status(403).json({
+            success: false,
+            message: 'Admin access required'
+        });
+    }
+    next();
+}
+
+// Route untuk halaman admin orders
+app.get('/admin/orders', checkAdmin, (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/admin/orders.html'));
+});
+
+// Get all orders untuk admin dengan pagination dan filter
+// Get all orders untuk admin dengan pagination dan filter
+app.get('/api/admin/orders', checkAdmin, async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const status = req.query.status || '';
+        const search = req.query.search || '';
+        const offset = (page - 1) * limit;
+
+        let query = `
+            SELECT 
+                o.id,
+                o.created_at,
+                o.total_amount,
+                COALESCE(o.status, 'pending') as status,
+                u.username as customer_name,
+                GROUP_CONCAT(p.nama SEPARATOR ', ') as product_names,
+                GROUP_CONCAT(oi.quantity) as quantities
+            FROM orders o
+            JOIN users u ON o.user_id = u.id
+            JOIN order_items oi ON o.id = oi.order_id
+            JOIN products p ON oi.product_id = p.id
+            WHERE 1=1
+        `;
+        
+        const queryParams = [];
+
+        if (status) {
+            query += ` AND o.status = ?`;
+            queryParams.push(status);
+        }
+
+        if (search) {
+            query += ` AND (o.id LIKE ? OR u.username LIKE ? OR p.nama LIKE ?)`;
+            queryParams.push(`%${search}%`, `%${search}%`, `%${search}%`);
+        }
+
+        query += ` GROUP BY o.id`;
+
+        // Hitung total orders untuk pagination
+        const [countResult] = await db.query(
+            `SELECT COUNT(DISTINCT o.id) as total FROM orders o 
+             JOIN users u ON o.user_id = u.id
+             JOIN order_items oi ON o.id = oi.order_id
+             JOIN products p ON oi.product_id = p.id
+             WHERE 1=1 ${status ? ' AND o.status = ?' : ''} 
+             ${search ? ' AND (o.id LIKE ? OR u.username LIKE ? OR p.nama LIKE ?)' : ''}`,
+            queryParams
+        );
+        const totalOrders = countResult[0].total;
+
+        // Tambah pagination ke query utama
+        query += ` ORDER BY o.created_at DESC LIMIT ? OFFSET ?`;
+        queryParams.push(limit, offset);
+
+        const [orders] = await db.query(query, queryParams);
+
+        // Format data sebelum dikirim
+        const formattedOrders = orders.map(order => ({
+            ...order,
+            total_amount: parseFloat(order.total_amount),
+            created_at: order.created_at.toISOString(),
+            products: order.product_names.split(',').map((name, index) => ({
+                name: name.trim(),
+                quantity: parseInt(order.quantities.split(',')[index])
+            }))
+        }));
+
+        res.json({
+            success: true,
+            orders: formattedOrders,
+            totalPages: Math.ceil(totalOrders / limit),
+            totalOrders,
+            currentPage: page
+        });
+
+    } catch (error) {
+        console.error('Error getting admin orders:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error getting orders'
+        });
+    }
+});
+
+// Get detail order untuk admin
+app.get('/api/admin/orders/:id', checkAdmin, async (req, res) => {
+    try {
+        const orderId = req.params.id;
+        
+        // Query untuk mendapatkan detail order dan items
+        const [orderDetails] = await db.query(`
+            SELECT 
+                o.id,
+                o.created_at,
+                o.total_amount,
+                COALESCE(o.status, 'pending') as status,
+                u.username as customer_name,
+                u.email as customer_email
+            FROM orders o
+            JOIN users u ON o.user_id = u.id
+            WHERE o.id = ?
+        `, [orderId]);
+
+        if (!orderDetails.length) {
+            return res.status(404).json({
+                success: false,
+                message: 'Order not found'
+            });
+        }
+
+        // Query terpisah untuk items
+        const [orderItems] = await db.query(`
+            SELECT 
+                p.id,
+                p.nama as name,
+                p.namaFileGambar as image,
+                oi.quantity,
+                oi.price,
+                p.diskon as discount
+            FROM order_items oi
+            JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id = ?
+        `, [orderId]);
+
+        // Format response
+        const order = {
+            ...orderDetails[0],
+            total_amount: parseFloat(orderDetails[0].total_amount),
+            created_at: orderDetails[0].created_at.toISOString(),
+            items: orderItems.map(item => ({
+                ...item,
+                price: parseFloat(item.price),
+                discount: parseFloat(item.discount || 0)
+            }))
+        };
+
+        res.json({
+            success: true,
+            order
+        });
+
+    } catch (error) {
+        console.error('Error getting order details:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error getting order details'
+        });
+    }
+});
+
+// Update order status (admin only)
+app.put('/api/admin/orders/:id/status', checkAdmin, async (req, res) => {
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        const { status } = req.body;
+        const orderId = req.params.id;
+
+        console.log('Updating order status:', { orderId, status }); // Debug log
+
+        // Validasi status
+        const validStatuses = ['pending', 'processing', 'completed', 'cancelled'];
+        if (!validStatuses.includes(status)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Status tidak valid'
+            });
+        }
+
+        // Cek apakah order exists
+        const [order] = await connection.query(
+            'SELECT id FROM orders WHERE id = ?',
+            [orderId]
+        );
+
+        if (!order.length) {
+            await connection.rollback();
+            return res.status(404).json({
+                success: false,
+                message: 'Order tidak ditemukan'
+            });
+        }
+
+        // Update status
+        await connection.query(
+            'UPDATE orders SET status = ? WHERE id = ?',
+            [status, orderId]
+        );
+
+        await connection.commit();
+        console.log('Status updated successfully'); // Debug log
+
+        res.json({
+            success: true,
+            message: 'Status pesanan berhasil diperbarui'
+        });
+
+    } catch (error) {
+        await connection.rollback();
+        console.error('Error updating order status:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Gagal mengupdate status pesanan'
+        });
+    } finally {
+        connection.release();
     }
 });
